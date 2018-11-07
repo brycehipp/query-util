@@ -1,0 +1,40 @@
+{
+  "name": "Query Util",
+  "version": "1.0.0",
+  "author": "Bryce Hipp",
+  "location": "brycehipp/query-util",
+  "homepage": "https://github.com/brycehipp/query-util",
+  "documentation": "https://github.com/brycehipp/query-util",
+  "repository": {
+    "type": "git",
+    "URL": "https://github.com/brycehipp/query-util"
+  },
+  "bugs": "https://github.com/brycehipp/query-util/issues",
+  "slug": "query-util",
+  "shortDescription": "Collection of utilities for working with queries",
+  "description": "Collection of utilities for working with queries",
+  "type": "modules",
+  "keywords": ["query", "utility"],
+  "private": false,
+  "license": [
+    {
+      "type": "MIT",
+      "URL": "https://github.com/brycehipp/query-util/blob/master/LICENSE"
+    }
+  ],
+  "devDependencies": {
+    "testbox": "^2.5.0+107"
+  },
+  "installPaths": {
+    "testbox": "testbox"
+  },
+  "ignore": ["**/.*", "test", "tests"],
+  "scripts": {
+    "postVersion": "package set location='brycehipp/query-util#v`package version`'",
+    "onRelease": "publish",
+    "postPublish": "!git push && !git push --tags"
+  },
+  "testbox": {
+    "runner": "http://localhost:8500/tests/runner.cfm"
+  }
+}

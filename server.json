@@ -1,0 +1,13 @@
+{
+    "openBrowser":false,
+    "trayEnable":false,
+    "app":{
+        "cfengine":"adobe@10"
+    },
+    "web":{
+        "http":{
+            "port":"8500"
+        }
+    },
+    "name":""
+}

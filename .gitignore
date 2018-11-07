@@ -1,0 +1,8 @@
+# Editor
+.vscode/
+
+# CF
+testbox/
+
+# Node
+node_modules/
