@@ -14,8 +14,8 @@ env:
     - ENGINE=adobe@2016
     - ENGINE=adobe@11
     - ENGINE=adobe@10
-    #- ENGINE=lucee@5
-    #- ENGINE=lucee@4.5
+    - ENGINE=lucee@5
+    - ENGINE=lucee@4.5
 
 before_install:
   - curl -fsSl https://downloads.ortussolutions.com/debs/gpg | sudo apt-key add -
