@@ -8,24 +8,22 @@ component {
      * @count Count of record to splice after the starting row. if 0, no rows will be spliced
      */
     public query function splice(required query query, required numeric start, numeric count = 1) {
-      var columns = getColumnNames(arguments.query);
+      // Go ahead and return the query if theres nothing to splice
+      if (!val(count)) return query;
+
+      var columns = getColumnNames(query);
       var newQuery = queryNew(arrayToList(columns));
-      var recordCount = arguments.query.recordCount;
-      var startOffset = arguments.count - 1;
+      var recordCount = query.recordCount;
+      var startOffset = count - 1;
 
-      if (arguments.start >= recordCount) {
-        return newQuery;
-      }
-
-      if (!val(arguments.count)) {
-        return arguments.query;
-      }
+      // Return empty if we are starting at the query's record count or higher
+      if (start >= recordCount) return newQuery;
 
       for (var row = 1; row <= recordCount; row++) {
-        if (row < arguments.start || row > arguments.start + startOffset) {
+        if (row < start || row > start + startOffset) {
           queryAddRow(newQuery, 1);
           for (var column in columns) {
-            querySetCell(newQuery, column, arguments.query[column][row]);
+            querySetCell(newQuery, column, query[column][row]);
           }
         }
       }
@@ -42,37 +40,35 @@ component {
      * @end Row before which to end the slice
      */
     public query function slice(required query query, required numeric begin, numeric end = 0) {
-      var columns = getColumnNames(arguments.query);
+      var recordCount = query.recordCount;
+
+      // If the whole query is being asked for, just return it
+      if (begin == 1 && end == recordCount + 1) return query;
+
+      var columns = getColumnNames(query);
       var newQuery = queryNew(arrayToList(columns));
-      var recordCount = arguments.query.recordCount;
 
       // If end is anything more than recordCount, its the same as recordCount + 1
       // We always want to return the rest of the query
-      if (arguments.end > recordCount) {
-        arguments.end = recordCount + 1;
+      if (end > recordCount) {
+        end = recordCount + 1;
       }
 
-      // If the whole query is being asked for, just return it
-      if (arguments.begin == 1 && arguments.end == recordCount + 1) {
-        return arguments.query;
+      if (begin >= recordCount) return newQuery;
+
+      if (!val(end)) {
+        end = recordCount + 1;
       }
 
-      if (arguments.begin >= recordCount) {
-        return newQuery;
-      }
-
-      if (!val(arguments.end)) {
-        arguments.end = recordCount + 1;
-      }
-      if (arguments.end == 1){
-        arguments.end++;
+      if (end == 1){
+        end++;
       }
 
       for (var row = 1; row <= recordCount; row++) {
-        if (row >= arguments.begin && row < arguments.end) {
+        if (row >= begin && row < end) {
           queryAddRow(newQuery, 1);
           for (var column in columns) {
-            querySetCell(newQuery, column, arguments.query[column][row]);
+            querySetCell(newQuery, column, query[column][row]);
           }
         }
       }
@@ -88,17 +84,17 @@ component {
      * @newName The new column name
      */
     public query function renameColumn(required query query, required string oldName, required string newName) {
-      var columns = getColumnNames(arguments.query);
+      var columns = getColumnNames(query);
+      var newNames = [];
 
-      for (var i = 1; i <= arrayLen(columns); i++) {
-        if (lCase(columns[i]) == lCase(arguments.oldName)) {
-          columns[i] = arguments.newName;
-        }
+      for (var column in columns) {
+        var name = lCase(column) == lCase(oldName) ? newName : column;
+        arrayAppend(newNames, name);
       }
 
-      arguments.query.setColumnNames(columns);
+      query.setColumnNames(newNames);
 
-      return arguments.query;
+      return query;
     }
 
   /**
@@ -109,7 +105,7 @@ component {
    * @query Query to get the column names of
    */
   public array function getColumnNames(required query query) {
-    var metaData = getMetadata(arguments.query);
+    var metaData = getMetadata(query);
 
     var columnNames = [];
 
