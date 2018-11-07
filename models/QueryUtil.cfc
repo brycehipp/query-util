@@ -8,7 +8,7 @@ component {
      * @count Count of record to splice after the starting row. if 0, no rows will be spliced
      */
     public query function splice(required query query, required numeric start, numeric count = 1) {
-      var columns = arguments.query.getColumnList();
+      var columns = getColumnNames(arguments.query);
       var newQuery = queryNew(arrayToList(columns));
       var recordCount = arguments.query.recordCount;
       var startOffset = arguments.count - 1;
@@ -42,7 +42,7 @@ component {
      * @end Row before which to end the slice
      */
     public query function slice(required query query, required numeric begin, numeric end = 0) {
-      var columns = arguments.query.getColumnList();
+      var columns = getColumnNames(arguments.query);
       var newQuery = queryNew(arrayToList(columns));
       var recordCount = arguments.query.recordCount;
 

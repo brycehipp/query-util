@@ -127,7 +127,7 @@ component extends="testbox.system.BaseSpec"{
           var initialQuery = getMockBox().querySim('col1,col2
           1 | 1
           2 | 2');
-          var columns = initialQuery.getColumnNames();
+          var columns = getColumnNames(initialQuery);
           var columnsLen = arrayLen(columns);
           var oldColumnName = columns[columnsLen];
           var newColumnName = columns[columnsLen] & '_test';
@@ -143,7 +143,7 @@ component extends="testbox.system.BaseSpec"{
             .toBeQuery()
             .notToBeEmpty();
 
-          expect(queryUnderTest.getColumnNames())
+          expect(getColumnNames(queryUnderTest))
             .toHaveLength(columnsLen)
             .toBeArray()
             .toBe(expectedColumns);
@@ -168,5 +168,10 @@ component extends="testbox.system.BaseSpec"{
         });
       });
     });
+  }
+
+  public array function getColumnNames(required query query) {
+    if (server.coldfusion.productName == 'lucee') return queryColumnArray(query);
+    return query.getColumnNames();
   }
 }
